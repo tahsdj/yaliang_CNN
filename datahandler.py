@@ -8,67 +8,71 @@ import random
 import cv2
 import os
 
-chess_path = './dataset/crop_chessboards/'
-cake_path = './dataset/crop_green_bean_cakes/'
-paper_path = './dataset/crop_manuscript_papers/'
 
-chess_files = os.listdir(chess_path)
-cake_files = os.listdir(cake_path)
-paper_files = os.listdir(paper_path)
+def getData():
+    chess_path = './dataset/crop_chessboards/'
+    cake_path = './dataset/crop_green_bean_cakes/'
+    paper_path = './dataset/crop_manuscript_papers/'
 
-# create labels and add to a list
-chess_data = []
-cake_data = []
-paper_data = []
+    chess_files = os.listdir(chess_path)
+    cake_files = os.listdir(cake_path)
+    paper_files = os.listdir(paper_path)
 
-for file in chess_files:
-    chess_arr = io.imread(chess_path+file)
-    if len(chess_arr.shape) == 3:
-        label = np.array([1,0,0])
-        chess_data.append(np.array([chess_arr, label]))
+    # create labels and add to a list
+    chess_data = []
+    cake_data = []
+    paper_data = []
 
-for file in cake_files:
-    cake_arr = io.imread(cake_path+file)
-    if len(cake_arr.shape) == 3:
-        label = np.array([0,1,0])
-        cake_data.append(np.array([cake_arr, label]))
+    for file in chess_files:
+        chess_arr = io.imread(chess_path+file)
+        if len(chess_arr.shape) == 3:
+            label = np.array([1,0,0])
+            chess_data.append(np.array([chess_arr, label]))
 
-for file in paper_files:
-    paper_arr = io.imread(paper_path+file)
-    if len(paper_arr.shape) == 3:
-        label = np.array([0,0,1])
-        paper_data.append(np.array([paper_arr, label]))
+    for file in cake_files:
+        cake_arr = io.imread(cake_path+file)
+        if len(cake_arr.shape) == 3:
+            label = np.array([0,1,0])
+            cake_data.append(np.array([cake_arr, label]))
 
-# change to numpy array
-chess_data = np.array(chess_data)
-cake_data = np.array(cake_data)
-paper_data = np.array(paper_data)
+    for file in paper_files:
+        paper_arr = io.imread(paper_path+file)
+        if len(paper_arr.shape) == 3:
+            label = np.array([0,0,1])
+            paper_data.append(np.array([paper_arr, label]))
 
-# randomly shuffle data
-np.random.shuffle(chess_data)
-np.random.shuffle(cake_data)
-np.random.shuffle(paper_data)
+    # change to numpy array
+    chess_data = np.array(chess_data)
+    cake_data = np.array(cake_data)
+    paper_data = np.array(paper_data)
 
-training_ratio = 0.75
+    # randomly shuffle data
+    np.random.shuffle(chess_data)
+    np.random.shuffle(cake_data)
+    np.random.shuffle(paper_data)
 
-# get training data
-training_chess = chess_data[0: int(len(chess_data)*training_ratio)]
-training_cake = cake_data[0: int(len(cake_data)*training_ratio)]
-training_paper = paper_data[0: int(len(paper_data)*training_ratio)]
+    training_ratio = 0.75
 
-# get tast data
-test_chess = chess_data[int(len(chess_data)*training_ratio):]
-test_cake = cake_data[int(len(cake_data)*training_ratio):]
-test_paper = paper_data[int(len(paper_data)*training_ratio):]
+    # get training data
+    training_chess = chess_data[0: int(len(chess_data)*training_ratio)]
+    training_cake = cake_data[0: int(len(cake_data)*training_ratio)]
+    training_paper = paper_data[0: int(len(paper_data)*training_ratio)]
 
-# concat all training data
-training_data = np.concatenate([training_chess, training_cake, training_paper],axis=0)
-np.random.shuffle(training_data)
-print('training data shape: ', training_data.shape)
+    # get tast data
+    test_chess = chess_data[int(len(chess_data)*training_ratio):]
+    test_cake = cake_data[int(len(cake_data)*training_ratio):]
+    test_paper = paper_data[int(len(paper_data)*training_ratio):]
 
-# concat all test data
-test_data = np.concatenate([test_chess, test_cake, test_paper],axis=0)
-print('test data shape: ', test_data.shape)
+    # concat all training data
+    training_data = np.concatenate([training_chess, training_cake, training_paper],axis=0)
+    np.random.shuffle(training_data)
+    print('training data shape: ', training_data.shape)
+
+    # concat all test data
+    test_data = np.concatenate([test_chess, test_cake, test_paper],axis=0)
+    print('test data shape: ', test_data.shape)
+
+    return training_data, test_data
 
 
 # create data handler
